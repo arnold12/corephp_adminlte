@@ -39,7 +39,7 @@ if( $_SERVER['HTTP_HOST'] == "dev.motorbuddy.com" ){
 
 	define("DB_PASSWD",'secret');
 
-	define("DB_NAME",'motorbuddy');
+	define("DB_NAME",'corephp_adminlte');
 
 	define("USE_PCONNECT",'false');
 }
