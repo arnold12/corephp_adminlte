@@ -3,8 +3,51 @@ require_once 'config.php';
 if (!isUserLoggedIn()) {
     header("Location: logout.php");
 }
-// echo "abc";
-// exit();
+
+$DBI = new Db();
+
+$DBI->query("SET NAMES 'utf8'");
+
+if(isset($_GET['id']) && $_GET['id'] != "" && !isset($_POST['frm'])){
+    
+    
+    $select_info = "SELECT `id`, `username`, `email`, `password` 
+    FROM `users`
+    WHERE (`id` = '".$_GET['id']."')";
+
+    $result_info = $DBI->query($select_info);
+    
+    if(mysql_num_rows($result_info) == 0){
+        header('Location: users.php');die();
+    }
+    
+    $rows_info = $DBI->get_result($select_info);
+       
+}
+
+if(isset($_POST['frm']) && $_POST['frm'] == '1' ){
+    
+    
+    $username = mysql_real_escape_string($_POST['username']);
+    $email = mysql_real_escape_string($_POST['email']);
+    $password = mysql_real_escape_string($_POST['password']);
+    
+    if($_POST['mode'] == 'edit'){ // Edit mode
+        
+        // Update data for user
+        $update = "UPDATE `users` SET `username`='".$username."', `email`='".$email."', `password`='".$password."' WHERE id = '".$_POST['id']."' ";
+        $res_update = $DBI->query($update);
+
+        
+    } else { // Add mode
+        
+       // Insert data for user 
+       $insert = "INSERT INTO `users` (`username`, `email`, `password`, `role`) VALUES ('".$username."', '".$email."', '".$password."', 'admin')";
+       $res_insert = $DBI->query($insert);
+       
+    }   
+    header('Location: users.php');
+}
 ?>
 <!DOCTYPE html>
 <html>
@@ -54,23 +97,23 @@ if (!isUserLoggedIn()) {
         <div class="row">
             <div class="col-md-8 col-md-offset-2">
                 <div class="panel panel-default">
-                    <div class="panel-heading">Add new user</div>
+                    <div class="panel-heading"><?php echo (isset($_GET['id']) ? 'Edit' : 'Add' )?> user</div>
                     <div class="panel-body">
-                        <form class="form-horizontal" id="user-form" method="POST" enctype="multipart/form-data" action="add-edit-user.php">
+                        <form class="" id="user-form" method="POST" enctype="multipart/form-data" action="add-edit-user.php">
                         <div class="row">
                             <div class="form-group col-sm-6 ">
-                              <label for="name" class="control-label">Name</label>
-                              <input class="form-control" required="" name="name" type="text" id="name">
-                              <label id="err_msg_name" class="control-label err_msg" style="color: #dd4b39;font-size: 15px;display: none;"></label>
+                              <label for="err_msg_username" class="control-label">User Name</label>
+                              <input class="form-control" value="<?=isset($rows_info[0]['username']) ? $rows_info[0]['username'] : '';?>" required="" name="username" type="text" id="username">
+                              <label id="err_msg_username" class="control-label err_msg" style="color: #dd4b39;font-size: 15px;display: none;"></label>
                             </div>
                             <div class="form-group col-sm-6 ">
                               <label for="email" class="control-label">Email</label>
-                              <input class="form-control" required="" name="email" type="email" id="email">
+                              <input class="form-control" value="<?=isset($rows_info[0]['email']) ? $rows_info[0]['email'] : '';?>" required="" name="email" type="email" id="email">
                               <label id="err_msg_email" class="control-label err_msg" style="color: #dd4b39;font-size: 15px;display: none;"></label>
                             </div>
                             <div class="form-group col-sm-6 ">
                               <label for="password" class="control-label">Password</label>
-                              <input class="form-control" required="" name="password" type="text" id="password">
+                              <input class="form-control" value="<?=isset($rows_info[0]['password']) ? $rows_info[0]['password'] : '';?>" required="" name="password" type="text" id="password">
                               <label id="err_msg_password" class="control-label err_msg" style="color: #dd4b39;font-size: 15px;display: none;"></label>
                             </div>
                         </div>
@@ -80,6 +123,15 @@ if (!isUserLoggedIn()) {
                                 <label id="succes_msg" class="control-label succes_msg" style="color: green;font-size: 14px;"></label>
                             </div>
                         </div>
+                        <input type="hidden" name="frm" value="1">
+                        <input type="hidden" name="mode" id="mode" value="<?php echo (isset($_GET['id']) ? 'edit' : 'add' )?>">
+                        <?php
+                          if(isset($_GET['id'])){
+                        ?>
+                            <input type="hidden" name="id" id="id" value="<?= $_GET['id'] ?>">
+                        <?php
+                          }
+                        ?>
                         </form>
                     </div>
                 </div>

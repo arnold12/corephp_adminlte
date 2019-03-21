@@ -5,10 +5,10 @@ function validate_user_info() {
   $(".err_msg").html("");
   $(".err_msg").hide();
 
-  if ($.trim($("#name").val()) == "") {
-    $("#err_msg_name").show();
-    $("#err_msg_name").html("Enter Name.");
-    $("#name").focus();
+  if ($.trim($("#username").val()) == "") {
+    $("#err_msg_username").show();
+    $("#err_msg_username").html("Enter User Name.");
+    $("#username").focus();
     return false;
   }
 
@@ -34,7 +34,7 @@ function validate_user_info() {
   }
 
   //$('input:submit').attr("disabled", true);
-  $('#submit').remove();
+  $('#submit').hide();
   $(".succes_msg").html("Please Wait...");
   return true;
 }

@@ -3,8 +3,14 @@ require_once 'config.php';
 if (!isUserLoggedIn()) {
     header("Location: logout.php");
 }
-// echo "abc";
-// exit();
+
+$DBI = new Db();
+
+$DBI->query("SET NAMES 'utf8'");
+
+$select_user = "SELECT `id`, `username` FROM `users`";
+//$result_service_repair = $DBI->query($select_service_repair);
+$rows_user = $DBI->get_result($select_user);
 ?>
 <!DOCTYPE html>
 <html>
@@ -68,27 +74,27 @@ if (!isUserLoggedIn()) {
                   <thead>
                     <tr role="row">
                       <th style="text-align:center;">Id</th>
-                      <th style="text-align:center;">Name</th>
+                      <th style="text-align:center;">User Name</th>
                       <th style="text-align:center;">Action</th>
                     </tr>
                   </thead>
                   <tbody>
-                   
-                    <tr id="client_{{ $client->id }}">
-                      <td>{{ $client->id }}</td>
-                      <td>{{ $client->name }}</td>
-                      <td><a title="Edit" href="{{ route('clients.edit', ['id' => $client->id]) }}" class="btn btn-sm btn-primary"><i class="glyphicon glyphicon-pencil"></i></a>
-                        
+                    <?php 
+                    if(!empty($rows_user )){
+                      $i = 1;
+                      foreach($rows_user as $key => $value){
+                    ?>
+                    <tr>
+                      <td><?=$i?></td>
+                      <td><?=$value['username']?></td>
+                      <td><a title="Edit" href="add-edit-user.php?id=<?=$value['id']?>" class="btn btn-sm btn-primary"><i class="glyphicon glyphicon-pencil"></i></a>
                       </td>
                     </tr>
-
-                    <tr id="client_{{ $client->id }}">
-                      <td>{{ $client->id }}</td>
-                      <td>david</td>
-                      <td><a title="Edit" href="{{ route('clients.edit', ['id' => $client->id]) }}" class="btn btn-sm btn-primary"><i class="glyphicon glyphicon-pencil"></i></a>
-                      </td>
-                    </tr>
-                  
+                    <?php
+                        $i++;
+                      }
+                    }
+                    ?>
                   </tbody>
                 </table>
               </div>
