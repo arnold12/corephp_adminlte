@@ -32,6 +32,7 @@ $rows_user = $DBI->get_result($select_user);
   <!-- AdminLTE Skins. Choose a skin from the css/skins
        folder instead of downloading all of them to reduce the load. -->
   <link rel="stylesheet" href="dist/css/skins/_all-skins.min.css">
+  <link rel="stylesheet" href="dist/css/sweetalert.min.css">
   
 
   <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
@@ -87,7 +88,8 @@ $rows_user = $DBI->get_result($select_user);
                     <tr>
                       <td><?=$i?></td>
                       <td><?=$value['username']?></td>
-                      <td><a title="Edit" href="add-edit-user.php?id=<?=$value['id']?>" class="btn btn-sm btn-primary"><i class="glyphicon glyphicon-pencil"></i></a>
+                      <td><a title="Edit" href="add-edit-user.php?id=<?=$value['id']?>" class="btn btn-sm btn-primary"><i class="glyphicon glyphicon-pencil"></i></a>&nbsp;&nbsp;
+                        <a title="Delete" onclick="del_user(<?=$value['id']?>)" class="btn btn-danger"><i class="fa fa-trash"></i></a>
                       </td>
                     </tr>
                     <?php
@@ -119,6 +121,36 @@ $rows_user = $DBI->get_result($select_user);
 <script src="plugins/datatables/dataTables.bootstrap.min.js"></script>
 <!-- AdminLTE App -->
 <script src="dist/js/app.min.js"></script>
+<script src="dist/js/sweetalert.min.js"></script>
+<script type="text/javascript">
+  function del_user(id){
+    swal({   title: "Do you want to delete user?",   
+    type: "warning",   
+    showCancelButton: true,   
+    confirmButtonColor: "#DD6B55",   
+    confirmButtonText: "Yes",   
+    cancelButtonText: "No",   
+    closeOnConfirm: false,   
+    closeOnCancel: false }, 
+    function(isConfirm){   
+        if (isConfirm) { 
+            var action = "delete_user";
+            $.ajax({
+              url: "ajax_function.php",
+              type: "POST",
+              data: { id: id, action: action },
+              success: function(result) {
+                swal("User Removed!", "User removed permanently!", "success");
+                location.reload();
+              }
+            });   
+        } 
+        else {     
+               swal("", "User is not removed!", "error");  
+        } 
+   });
+  }
+</script>
 <script>
   $(function () {
     $("#data-table").DataTable();

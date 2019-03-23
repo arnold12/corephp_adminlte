@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: Dec 09, 2018 at 02:22 PM
+-- Generation Time: Mar 23, 2019 at 09:47 AM
 -- Server version: 5.7.22-0ubuntu18.04.1
 -- PHP Version: 7.2.5-1+ubuntu18.04.1+deb.sury.org+1
 
@@ -31,6 +31,7 @@ SET time_zone = "+00:00";
 CREATE TABLE `users` (
   `id` int(11) NOT NULL,
   `username` varchar(20) NOT NULL,
+  `email` varchar(120) NOT NULL,
   `password` varchar(10) NOT NULL,
   `role` enum('superadmin','admin','dealer') DEFAULT NULL,
   `created_by` int(11) DEFAULT NULL,
@@ -43,8 +44,9 @@ CREATE TABLE `users` (
 -- Dumping data for table `users`
 --
 
-INSERT INTO `users` (`id`, `username`, `password`, `role`, `created_by`, `created_on`, `updated_by`, `updated_on`) VALUES
-(1, 'admin', 'admin@123', 'superadmin', NULL, NULL, NULL, NULL);
+INSERT INTO `users` (`id`, `username`, `email`, `password`, `role`, `created_by`, `created_on`, `updated_by`, `updated_on`) VALUES
+(1, 'admin', 'admin@gmail.com', 'admin@123', 'superadmin', NULL, NULL, NULL, NULL),
+(2, 'adminsss', 'david.dmello@hnrtech.com', 'd', 'admin', NULL, NULL, NULL, NULL);
 
 --
 -- Indexes for dumped tables
@@ -64,7 +66,7 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
